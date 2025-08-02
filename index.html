@@ -1,169 +1,410 @@
-<!DOCTYPE html><html lang="pt-br">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎮 MiniGames - 20 Jogos</title>
-  <style>
-    :root {
-      --bg: #111;
-      --card: #1e1e1e;
-      --text: #f2f2f2;
-      --accent: #00bcd4;
-    }body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-h1 {
-  margin: 20px;
-  color: var(--accent);
-  text-shadow: 0 0 10px var(--accent);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
-  width: 90%;
-  max-width: 1200px;
-  padding: 20px;
-}
-
-.card {
-  background: var(--card);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px #00000088;
-  text-align: center;
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: scale(1.05);
-}
-
-iframe {
-  width: 100%;
-  height: 180px;
-  border: none;
-  border-radius: 8px;
-}
-
-.title {
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pixter - Instagram 2.0</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; background: #fafafa; font-family: 'Montserrat', sans-serif; color: #262626;
+    display: flex; flex-direction: column; min-height: 100vh;
+  }
+  .header {
+    background: #fff; display: flex; justify-content: space-between; align-items: center;
+    padding: 0.8rem 1rem; box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo {
+    font-weight: 700; font-size: 1.5rem; color: #e1306c; user-select: none;
+  }
+  #btn-upload {
+    font-size: 1.8rem; border: none; background: none; cursor: pointer; color: #e1306c;
+    transition: color 0.3s ease;
+  }
+  #btn-upload:hover {
+    color: #ad1457;
+  }
+  .stories {
+    background: #fff; padding: 1rem 0.5rem; display: flex; overflow-x: auto;
+    border-bottom: 1px solid #ddd;
+  }
+  .story {
+    flex: 0 0 auto; width: 70px; height: 70px; margin: 0 0.5rem; border-radius: 50%;
+    overflow: hidden; border: 3px solid #e1306c; cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  .story img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .story:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px #e1306caa;
+  }
+  main#feed {
+    flex-grow: 1; max-width: 600px; margin: 1rem auto; width: 100%;
+    display: flex; flex-direction: column; gap: 1.5rem;
+    padding-bottom: 2rem;
+  }
+  .post {
+    background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgb(0 0 0 / 0.05);
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .post-header {
+    display: flex; align-items: center; padding: 0.75rem 1rem;
+  }
+  .post-header img.avatar {
+    width: 40px; height: 40px; border-radius: 50%; margin-right: 1rem;
+    object-fit: cover; border: 2px solid #e1306c;
+  }
+  .post-header .username {
+    font-weight: 700; color: #262626;
+  }
+  .post-media {
+    width: 100%; max-height: 500px; background: #000;
+    display: flex; justify-content: center; align-items: center;
+    overflow: hidden;
+  }
+  .post-media img, .post-media video {
+    width: 100%; height: auto; max-height: 500px; object-fit: contain;
+  }
+  .post-actions {
+    padding: 0.5rem 1rem; display: flex; align-items: center; gap: 1rem;
+  }
+  .like-btn, .comment-btn {
+    cursor: pointer; font-size: 1.4rem; user-select: none;
+    color: #999; transition: color 0.2s ease;
+    display: flex; align-items: center; gap: 0.3rem;
+    background: none; border: none;
+  }
+  .like-btn.liked {
+    color: #e1306c;
+    filter: drop-shadow(0 0 4px #e1306c99);
+    animation: pop 0.3s ease forwards;
+  }
+  @keyframes pop {
+    0% {transform: scale(1);}
+    50% {transform: scale(1.3);}
+    100% {transform: scale(1);}
+  }
+  .post-likes-count {
+    font-weight: 600; color: #555;
+  }
+  .post-caption {
+    padding: 0 1rem 1rem 1rem; font-size: 0.95rem; color: #262626;
+  }
+  .comments-section {
+    padding: 0 1rem 1rem 1rem; max-height: 150px; overflow-y: auto;
+    border-top: 1px solid #eee;
+  }
+  .comment {
+    font-size: 0.9rem; margin-bottom: 0.3rem;
+  }
+  .comment strong {
+    margin-right: 0.3rem;
+  }
+  .comment-form {
+    border-top: 1px solid #ddd; display: flex; padding: 0.5rem 1rem;
+  }
+  .comment-form input {
+    flex-grow: 1; border: none; padding: 0.5rem; font-size: 0.9rem;
+    border-radius: 20px; background: #f0f0f0;
+    outline-offset: 2px;
+  }
+  .comment-form input:focus {
+    outline: 2px solid #e1306c;
+  }
+  .comment-form button {
+    border: none; background: none; color: #3897f0; font-weight: 700;
+    cursor: pointer; padding-left: 1rem; font-size: 0.9rem;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  .comment-form button:enabled {
+    opacity: 1;
+  }
+  .modal {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 999;
+  }
+  .modal.hidden {
+    display: none;
+  }
+  .modal-content {
+    background: #fff; border-radius: 12px; max-width: 400px;
+    width: 90%; padding: 1.5rem; box-shadow: 0 10px 30px rgb(0 0 0 / 0.2);
+    display: flex; flex-direction: column; gap: 1rem;
+    position: relative;
+  }
+  #upload-file {
+    width: 100%; cursor: pointer;
+  }
+  #upload-caption {
+    width: 100%; min-height: 60px; resize: vertical; padding: 0.5rem;
+    border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;
+    font-family: inherit;
+  }
+  #preview-container {
+    max-height: 200px; overflow: hidden; border-radius: 8px;
+    margin-top: 0.5rem;
+    display: flex; justify-content: center; align-items: center;
+  }
+  #preview-container img, #preview-container video {
+    max-width: 100%; max-height: 100%;
+    border-radius: 8px;
+  }
+  #modal-upload button {
+    padding: 0.7rem 1rem; border-radius: 8px; border: none; cursor: pointer;
+    font-weight: 700; font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  #modal-upload button[type="submit"] {
+    background: #e1306c; color: #fff;
+    margin-top: 0.5rem;
+  }
+  #modal-upload button[type="submit"]:disabled {
+    background: #e1306c99; cursor: default;
+  }
+  #btn-cancel {
+    background: #ccc; color: #333;
+    margin-top: 0.5rem;
+  }
+  #btn-cancel:hover {
+    background: #bbb;
+  }
+  @media (max-width: 480px) {
+    .post-header .username {
+      font-size: 1rem;
+    }
+    .header {
+      padding: 0.5rem 1rem;
+    }
+    #btn-upload {
+      font-size: 1.5rem;
+    }
+  }
+</style>
 </head>
 <body>
-  <h1>🎮 MiniGames - 20 Jogos</h1>
-  <div class="grid">
-    <!-- 1 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/snake/html5"></iframe>
-      <div class="title">Cobrinha (Snake)</div>
-    </div>
-    <!-- 2 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/flappy-bird/html5"></iframe>
-      <div class="title">Flappy Bird</div>
-    </div>
-    <!-- 3 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/tetris/html5"></iframe>
-      <div class="title">Tetris</div>
-    </div>
-    <!-- 4 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/2048/html5"></iframe>
-      <div class="title">2048</div>
-    </div>
-    <!-- 5 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/basketball-frvr/html5"></iframe>
-      <div class="title">Basquete</div>
-    </div>
-    <!-- 6 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/knife-rain/html5"></iframe>
-      <div class="title">Knife Rain</div>
-    </div>
-    <!-- 7 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/cut-the-rope/html5"></iframe>
-      <div class="title">Cut The Rope</div>
-    </div>
-    <!-- 8 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/solitaire-classic/html5"></iframe>
-      <div class="title">Paciência</div>
-    </div>
-    <!-- 9 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/mahjong/html5"></iframe>
-      <div class="title">Mahjong</div>
-    </div>
-    <!-- 10 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/bubble-shooter/html5"></iframe>
-      <div class="title">Bubble Shooter</div>
-    </div>
-    <!-- 11 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/stickman-fighter/html5"></iframe>
-      <div class="title">Stickman Fighter</div>
-    </div>
-    <!-- 12 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/minigolf/html5"></iframe>
-      <div class="title">Mini Golf</div>
-    </div>
-    <!-- 13 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/fancy-diver/html5"></iframe>
-      <div class="title">Fancy Diver</div>
-    </div>
-    <!-- 14 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/street-ball-jam/html5"></iframe>
-      <div class="title">Street Ball</div>
-    </div>
-    <!-- 15 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/treasures-of-mystery-island/html5"></iframe>
-      <div class="title">Ilha Misteriosa</div>
-    </div>
-    <!-- 16 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/hop-dont-stop/html5"></iframe>
-      <div class="title">Hop Don't Stop</div>
-    </div>
-    <!-- 17 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/fishdom-online/html5"></iframe>
-      <div class="title">Fishdom</div>
-    </div>
-    <!-- 18 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/rolling-ball/html5"></iframe>
-      <div class="title">Bola Rolante</div>
-    </div>
-    <!-- 19 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/doodle-jump/html5"></iframe>
-      <div class="title">Doodle Jump</div>
-    </div>
-    <!-- 20 -->
-    <div class="card">
-      <iframe src="https://play.famobi.com/fireboy-and-watergirl-forest-temple/html5"></iframe>
-      <div class="title">Fireboy & Watergirl</div>
+  <header class="header">
+    <div class="logo">Pixter</div>
+    <button id="btn-upload" aria-label="Novo post">➕</button>
+  </header>
+
+  <main id="feed" aria-live="polite" aria-label="Feed de posts">
+    <!-- Posts via JS -->
+  </main>
+
+  <!-- Modal upload -->
+  <div id="modal-upload" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <h2 id="modal-title">Novo Post</h2>
+      <form id="upload-form">
+        <label for="upload-file" class="upload-label">Escolha foto ou vídeo</label>
+        <input type="file" id="upload-file" accept="image/*,video/*" required />
+        <textarea id="upload-caption" placeholder="Legenda (opcional)" maxlength="2200"></textarea>
+        <button type="submit" disabled>Publicar</button>
+        <button type="button" id="btn-cancel">Cancelar</button>
+      </form>
+      <div id="preview-container"></div>
     </div>
   </div>
+
+<script>
+(() => {
+  // ====== Utilidades =======
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // ====== DOM =======
+  const feedEl = document.getElementById('feed');
+  const btnUpload = document.getElementById('btn-upload');
+  const modal = document.getElementById('modal-upload');
+  const uploadForm = document.getElementById('upload-form');
+  const uploadFile = document.getElementById('upload-file');
+  const uploadCaption = document.getElementById('upload-caption');
+  const previewContainer = document.getElementById('preview-container');
+  const btnCancel = document.getElementById('btn-cancel');
+  const submitBtn = uploadForm.querySelector('button[type="submit"]');
+
+  // ====== Estado =======
+  let posts = JSON.parse(localStorage.getItem('pixter_posts') || '[]');
+
+  // ====== Funções =======
+  // Salvar no localStorage
+  function savePosts() {
+    localStorage.setItem('pixter_posts', JSON.stringify(posts));
+  }
+
+  // Gerar ID único (simples)
+  function genId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+  }
+
+  // Renderizar posts
+  function renderPosts() {
+    feedEl.innerHTML = '';
+    if (!posts.length) {
+      feedEl.innerHTML = '<p style="text-align:center; color:#999;">Nenhum post ainda. Clique no + para criar!</p>';
+      return;
+    }
+    posts.forEach(post => {
+      feedEl.appendChild(createPostElement(post));
+    });
+  }
+
+  // Criar elemento de post
+  function createPostElement(post) {
+    const postEl = document.createElement('article');
+    postEl.className = 'post';
+    postEl.dataset.id = post.id;
+
+    postEl.innerHTML = `
+      <header class="post-header">
+        <img class="avatar" src="https://i.pravatar.cc/40?u=${post.userId}" alt="Avatar do usuário" />
+        <div class="username">${escapeHtml(post.username)}</div>
+      </header>
+      <div class="post-media">
+        ${post.type === 'image' ? `<img src="${post.url}" alt="Foto do post" loading="lazy" />`
+          : `<video src="${post.url}" controls muted preload="metadata"></video>`}
+      </div>
+      <div class="post-actions">
+        <button aria-label="Curtir post" class="like-btn" title="Curtir post" aria-pressed="${post.liked}">
+          ❤️ <span class="like-count">${post.likes}</span>
+        </button>
+        <button aria-label="Comentar no post" class="comment-btn" title="Comentar">
+          💬
+        </button>
+      </div>
+      <div class="post-caption"><strong>${escapeHtml(post.username)}</strong> ${escapeHtml(post.caption)}</div>
+      <section class="comments-section" aria-label="Comentários do post">
+        ${post.comments.map(c => `<div class="comment"><strong>${escapeHtml(c.user)}:</strong> ${escapeHtml(c.text)}</div>`).join('')}
+      </section>
+      <form class="comment-form" aria-label="Adicionar comentário">
+        <input type="text" placeholder="Comente..." aria-label="Campo de comentário" />
+        <button type="submit" disabled>Enviar</button>
+      </form>
+    `;
+
+    // Curtir botão
+    const likeBtn = postEl.querySelector('.like-btn');
+    likeBtn.addEventListener('click', () => {
+      if (post.liked) {
+        post.likes--;
+        post.liked = false;
+      } else {
+        post.likes++;
+        post.liked = true;
+      }
+      savePosts();
+      renderPosts();
+    });
+
+    // Comentário
+    const commentForm = postEl.querySelector('.comment-form');
+    const commentInput = commentForm.querySelector('input');
+    const commentSubmit = commentForm.querySelector('button');
+
+    // Habilitar botão enviar se tem texto
+    commentInput.addEventListener('input', () => {
+      commentSubmit.disabled = !commentInput.value.trim();
+    });
+
+    // Enviar comentário
+    commentForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const text = commentInput.value.trim();
+      if (!text) return;
+      post.comments.push({ user: 'Você', text });
+      savePosts();
+      renderPosts();
+    });
+
+    return postEl;
+  }
+
+  // Mostrar modal upload
+  btnUpload.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+    uploadForm.reset();
+    previewContainer.innerHTML = '';
+    submitBtn.disabled = true;
+  });
+
+  // Cancelar upload
+  btnCancel.addEventListener('click', () => {
+    modal.classList.add('hidden');
+  });
+
+  // Preview do arquivo
+  uploadFile.addEventListener('change', () => {
+    const file = uploadFile.files[0];
+    if (!file) {
+      previewContainer.innerHTML = '';
+      submitBtn.disabled = true;
+      return;
+    }
+    const type = file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : null;
+    if (!type) {
+      alert('Só aceitamos imagens ou vídeos.');
+      uploadFile.value = '';
+      previewContainer.innerHTML = '';
+      submitBtn.disabled = true;
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      if (type === 'image') {
+        previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview da imagem" />`;
+      } else {
+        previewContainer.innerHTML = `<video src="${e.target.result}" controls muted autoplay loop></video>`;
+      }
+      submitBtn.disabled = false;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Enviar post
+  uploadForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const file = uploadFile.files[0];
+    if (!file) return;
+
+    const type = file.type.startsWith('image/') ? 'image' : 'video';
+    const caption = uploadCaption.value.trim();
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      const newPost = {
+        id: genId(),
+        userId: 1234, // fixo (pode melhorar depois)
+        username: 'usuario123',
+        url: e.target.result,
+        type,
+        caption,
+        likes: 0,
+        liked: false,
+        comments: [],
+        createdAt: Date.now(),
+      };
+      posts.unshift(newPost);
+      savePosts();
+      renderPosts();
+      modal.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Inicializa
+  renderPosts();
+})();
+</script>
 </body>
 </html>
