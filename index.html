@@ -1,282 +1,169 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!DOCTYPE html><html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Mini Games</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 MiniGames - 20 Jogos</title>
   <style>
     :root {
-      --bg: #121212;
-      --card: #1f1f1f;
-      --primary: #00d0ff;
-      --accent: #ff0077;
-      --text: #f0f0f0;
-    }
+      --bg: #111;
+      --card: #1e1e1e;
+      --text: #f2f2f2;
+      --accent: #00bcd4;
+    }body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
+h1 {
+  margin: 20px;
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent);
+}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+  width: 90%;
+  max-width: 1200px;
+  padding: 20px;
+}
 
-    h1 {
-      margin-bottom: 20px;
-      color: var(--primary);
-    }
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #00000088;
+  text-align: center;
+  transition: transform 0.2s;
+}
 
-    .game-list {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+.card:hover {
+  transform: scale(1.05);
+}
 
-    .game-card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 20px;
-      width: 250px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      transition: transform 0.3s;
-    }
+iframe {
+  width: 100%;
+  height: 180px;
+  border: none;
+  border-radius: 8px;
+}
 
-    .game-card:hover {
-      transform: scale(1.05);
-    }
+.title {
+  margin-top: 10px;
+  font-weight: bold;
+}
 
-    .game-card h2 {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-      color: var(--accent);
-    }
-
-    .game-card button {
-      background: var(--primary);
-      color: var(--bg);
-      border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    canvas, .memory-grid, .click-box {
-      background: #000;
-      padding: 10px;
-      border-radius: 12px;
-    }
-
-    .memory-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 60px);
-      gap: 10px;
-    }
-
-    .memory-tile {
-      width: 60px;
-      height: 60px;
-      background: var(--primary);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #000;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .click-box {
-      padding: 30px;
-      text-align: center;
-      color: var(--text);
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 24px;
-      color: var(--text);
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
-
-  <h1>🎮 Mini Jogos</h1>
-
-  <div class="game-list">
-    <div class="game-card">
-      <h2>🐍 Jogo da Cobrinha</h2>
-      <button onclick="openGame('snake')">Jogar</button>
+  <h1>🎮 MiniGames - 20 Jogos</h1>
+  <div class="grid">
+    <!-- 1 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/snake/html5"></iframe>
+      <div class="title">Cobrinha (Snake)</div>
     </div>
-    <div class="game-card">
-      <h2>🧠 Jogo da Memória</h2>
-      <button onclick="openGame('memory')">Jogar</button>
+    <!-- 2 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/flappy-bird/html5"></iframe>
+      <div class="title">Flappy Bird</div>
     </div>
-    <div class="game-card">
-      <h2>⚡ Clique Rápido</h2>
-      <button onclick="openGame('click')">Jogar</button>
+    <!-- 3 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/tetris/html5"></iframe>
+      <div class="title">Tetris</div>
+    </div>
+    <!-- 4 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/2048/html5"></iframe>
+      <div class="title">2048</div>
+    </div>
+    <!-- 5 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/basketball-frvr/html5"></iframe>
+      <div class="title">Basquete</div>
+    </div>
+    <!-- 6 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/knife-rain/html5"></iframe>
+      <div class="title">Knife Rain</div>
+    </div>
+    <!-- 7 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/cut-the-rope/html5"></iframe>
+      <div class="title">Cut The Rope</div>
+    </div>
+    <!-- 8 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/solitaire-classic/html5"></iframe>
+      <div class="title">Paciência</div>
+    </div>
+    <!-- 9 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/mahjong/html5"></iframe>
+      <div class="title">Mahjong</div>
+    </div>
+    <!-- 10 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/bubble-shooter/html5"></iframe>
+      <div class="title">Bubble Shooter</div>
+    </div>
+    <!-- 11 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/stickman-fighter/html5"></iframe>
+      <div class="title">Stickman Fighter</div>
+    </div>
+    <!-- 12 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/minigolf/html5"></iframe>
+      <div class="title">Mini Golf</div>
+    </div>
+    <!-- 13 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/fancy-diver/html5"></iframe>
+      <div class="title">Fancy Diver</div>
+    </div>
+    <!-- 14 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/street-ball-jam/html5"></iframe>
+      <div class="title">Street Ball</div>
+    </div>
+    <!-- 15 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/treasures-of-mystery-island/html5"></iframe>
+      <div class="title">Ilha Misteriosa</div>
+    </div>
+    <!-- 16 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/hop-dont-stop/html5"></iframe>
+      <div class="title">Hop Don't Stop</div>
+    </div>
+    <!-- 17 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/fishdom-online/html5"></iframe>
+      <div class="title">Fishdom</div>
+    </div>
+    <!-- 18 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/rolling-ball/html5"></iframe>
+      <div class="title">Bola Rolante</div>
+    </div>
+    <!-- 19 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/doodle-jump/html5"></iframe>
+      <div class="title">Doodle Jump</div>
+    </div>
+    <!-- 20 -->
+    <div class="card">
+      <iframe src="https://play.famobi.com/fireboy-and-watergirl-forest-temple/html5"></iframe>
+      <div class="title">Fireboy & Watergirl</div>
     </div>
   </div>
-
-  <!-- Modais dos Jogos -->
-  <div class="modal" id="snake">
-    <div class="close-btn" onclick="closeGame('snake')">✖</div>
-    <canvas id="snakeCanvas" width="300" height="300"></canvas>
-  </div>
-
-  <div class="modal" id="memory">
-    <div class="close-btn" onclick="closeGame('memory')">✖</div>
-    <div class="memory-grid" id="memoryGrid"></div>
-  </div>
-
-  <div class="modal" id="click">
-    <div class="close-btn" onclick="closeGame('click')">✖</div>
-    <div class="click-box">
-      <p>Clique o máximo que puder em 5 segundos!</p>
-      <button onclick="startClickGame()">Começar</button>
-      <div id="clickResult"></div>
-    </div>
-  </div>
-
-  <script>
-    function openGame(id) {
-      document.getElementById(id).classList.add('active');
-      if (id === 'snake') startSnakeGame();
-      if (id === 'memory') startMemoryGame();
-    }
-
-    function closeGame(id) {
-      document.getElementById(id).classList.remove('active');
-      if (id === 'snake') stopSnakeGame();
-    }
-
-    // Snake Game
-    let snakeInterval;
-    function startSnakeGame() {
-      const canvas = document.getElementById('snakeCanvas');
-      const ctx = canvas.getContext('2d');
-      const grid = 15;
-      let count = 0;
-      let snake = [{x: 150, y: 150}];
-      let dx = grid;
-      let dy = 0;
-      let apple = {x: 75, y: 75};
-
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowLeft' && dx === 0) { dx = -grid; dy = 0; }
-        if (e.key === 'ArrowUp' && dy === 0)   { dx = 0; dy = -grid; }
-        if (e.key === 'ArrowRight' && dx === 0){ dx = grid; dy = 0; }
-        if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = grid; }
-      });
-
-      snakeInterval = setInterval(() => {
-        if (++count < 4) return;
-        count = 0;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        let head = {x: snake[0].x + dx, y: snake[0].y + dy};
-        snake.unshift(head);
-
-        if (head.x === apple.x && head.y === apple.y) {
-          apple.x = Math.floor(Math.random() * 20) * grid;
-          apple.y = Math.floor(Math.random() * 20) * grid;
-        } else {
-          snake.pop();
-        }
-
-        ctx.fillStyle = 'lime';
-        snake.forEach(part => ctx.fillRect(part.x, part.y, grid-1, grid-1));
-
-        ctx.fillStyle = 'red';
-        ctx.fillRect(apple.x, apple.y, grid-1, grid-1);
-
-        if (head.x < 0 || head.y < 0 || head.x >= canvas.width || head.y >= canvas.height ||
-            snake.slice(1).some(p => p.x === head.x && p.y === head.y)) {
-          alert('Game Over!');
-          snake = [{x: 150, y: 150}];
-          dx = grid;
-          dy = 0;
-        }
-      }, 100);
-    }
-
-    function stopSnakeGame() {
-      clearInterval(snakeInterval);
-    }
-
-    // Memory Game
-    function startMemoryGame() {
-      const grid = document.getElementById('memoryGrid');
-      grid.innerHTML = '';
-      const emojis = ['🍎','🍌','🍇','🍉','🍓','🍒','🍍','🥝'];
-      let cards = [...emojis, ...emojis].sort(() => 0.5 - Math.random());
-      let first = null;
-
-      cards.forEach((emoji, index) => {
-        const tile = document.createElement('div');
-        tile.className = 'memory-tile';
-        tile.dataset.emoji = emoji;
-        tile.textContent = '?';
-        tile.onclick = () => {
-          if (tile.textContent !== '?') return;
-          tile.textContent = emoji;
-          if (!first) {
-            first = tile;
-          } else {
-            if (first.dataset.emoji === tile.dataset.emoji && first !== tile) {
-              first = null;
-            } else {
-              setTimeout(() => {
-                first.textContent = '?';
-                tile.textContent = '?';
-                first = null;
-              }, 700);
-            }
-          }
-        };
-        grid.appendChild(tile);
-      });
-    }
-
-    // Click Speed Game
-    function startClickGame() {
-      let count = 0;
-      const box = document.querySelector('.click-box');
-      const result = document.getElementById('clickResult');
-      result.textContent = 'Clique!';
-      box.onclick = () => count++;
-      setTimeout(() => {
-        box.onclick = null;
-        result.textContent = `Você clicou ${count} vezes!`;
-      }, 5000);
-    }
-  </script>
 </body>
 </html>
