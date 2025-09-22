@@ -1,410 +1,204 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pixter - Instagram 2.0</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0; background: #fafafa; font-family: 'Montserrat', sans-serif; color: #262626;
-    display: flex; flex-direction: column; min-height: 100vh;
-  }
-  .header {
-    background: #fff; display: flex; justify-content: space-between; align-items: center;
-    padding: 0.8rem 1rem; box-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
-    position: sticky; top: 0; z-index: 100;
-  }
-  .logo {
-    font-weight: 700; font-size: 1.5rem; color: #e1306c; user-select: none;
-  }
-  #btn-upload {
-    font-size: 1.8rem; border: none; background: none; cursor: pointer; color: #e1306c;
-    transition: color 0.3s ease;
-  }
-  #btn-upload:hover {
-    color: #ad1457;
-  }
-  .stories {
-    background: #fff; padding: 1rem 0.5rem; display: flex; overflow-x: auto;
-    border-bottom: 1px solid #ddd;
-  }
-  .story {
-    flex: 0 0 auto; width: 70px; height: 70px; margin: 0 0.5rem; border-radius: 50%;
-    overflow: hidden; border: 3px solid #e1306c; cursor: pointer;
-    transition: transform 0.3s ease;
-  }
-  .story img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-  }
-  .story:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 8px #e1306caa;
-  }
-  main#feed {
-    flex-grow: 1; max-width: 600px; margin: 1rem auto; width: 100%;
-    display: flex; flex-direction: column; gap: 1.5rem;
-    padding-bottom: 2rem;
-  }
-  .post {
-    background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgb(0 0 0 / 0.05);
-    overflow: hidden; display: flex; flex-direction: column;
-  }
-  .post-header {
-    display: flex; align-items: center; padding: 0.75rem 1rem;
-  }
-  .post-header img.avatar {
-    width: 40px; height: 40px; border-radius: 50%; margin-right: 1rem;
-    object-fit: cover; border: 2px solid #e1306c;
-  }
-  .post-header .username {
-    font-weight: 700; color: #262626;
-  }
-  .post-media {
-    width: 100%; max-height: 500px; background: #000;
-    display: flex; justify-content: center; align-items: center;
-    overflow: hidden;
-  }
-  .post-media img, .post-media video {
-    width: 100%; height: auto; max-height: 500px; object-fit: contain;
-  }
-  .post-actions {
-    padding: 0.5rem 1rem; display: flex; align-items: center; gap: 1rem;
-  }
-  .like-btn, .comment-btn {
-    cursor: pointer; font-size: 1.4rem; user-select: none;
-    color: #999; transition: color 0.2s ease;
-    display: flex; align-items: center; gap: 0.3rem;
-    background: none; border: none;
-  }
-  .like-btn.liked {
-    color: #e1306c;
-    filter: drop-shadow(0 0 4px #e1306c99);
-    animation: pop 0.3s ease forwards;
-  }
-  @keyframes pop {
-    0% {transform: scale(1);}
-    50% {transform: scale(1.3);}
-    100% {transform: scale(1);}
-  }
-  .post-likes-count {
-    font-weight: 600; color: #555;
-  }
-  .post-caption {
-    padding: 0 1rem 1rem 1rem; font-size: 0.95rem; color: #262626;
-  }
-  .comments-section {
-    padding: 0 1rem 1rem 1rem; max-height: 150px; overflow-y: auto;
-    border-top: 1px solid #eee;
-  }
-  .comment {
-    font-size: 0.9rem; margin-bottom: 0.3rem;
-  }
-  .comment strong {
-    margin-right: 0.3rem;
-  }
-  .comment-form {
-    border-top: 1px solid #ddd; display: flex; padding: 0.5rem 1rem;
-  }
-  .comment-form input {
-    flex-grow: 1; border: none; padding: 0.5rem; font-size: 0.9rem;
-    border-radius: 20px; background: #f0f0f0;
-    outline-offset: 2px;
-  }
-  .comment-form input:focus {
-    outline: 2px solid #e1306c;
-  }
-  .comment-form button {
-    border: none; background: none; color: #3897f0; font-weight: 700;
-    cursor: pointer; padding-left: 1rem; font-size: 0.9rem;
-    opacity: 0.5;
-    transition: opacity 0.3s ease;
-  }
-  .comment-form button:enabled {
-    opacity: 1;
-  }
-  .modal {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 999;
-  }
-  .modal.hidden {
-    display: none;
-  }
-  .modal-content {
-    background: #fff; border-radius: 12px; max-width: 400px;
-    width: 90%; padding: 1.5rem; box-shadow: 0 10px 30px rgb(0 0 0 / 0.2);
-    display: flex; flex-direction: column; gap: 1rem;
-    position: relative;
-  }
-  #upload-file {
-    width: 100%; cursor: pointer;
-  }
-  #upload-caption {
-    width: 100%; min-height: 60px; resize: vertical; padding: 0.5rem;
-    border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;
-    font-family: inherit;
-  }
-  #preview-container {
-    max-height: 200px; overflow: hidden; border-radius: 8px;
-    margin-top: 0.5rem;
-    display: flex; justify-content: center; align-items: center;
-  }
-  #preview-container img, #preview-container video {
-    max-width: 100%; max-height: 100%;
-    border-radius: 8px;
-  }
-  #modal-upload button {
-    padding: 0.7rem 1rem; border-radius: 8px; border: none; cursor: pointer;
-    font-weight: 700; font-size: 1rem;
-    transition: background-color 0.3s ease;
-  }
-  #modal-upload button[type="submit"] {
-    background: #e1306c; color: #fff;
-    margin-top: 0.5rem;
-  }
-  #modal-upload button[type="submit"]:disabled {
-    background: #e1306c99; cursor: default;
-  }
-  #btn-cancel {
-    background: #ccc; color: #333;
-    margin-top: 0.5rem;
-  }
-  #btn-cancel:hover {
-    background: #bbb;
-  }
-  @media (max-width: 480px) {
-    .post-header .username {
-      font-size: 1rem;
+  <meta charset="UTF-8">
+  <title>Uploader de Vídeos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      text-align: center;
+      padding: 30px;
     }
-    .header {
-      padding: 0.5rem 1rem;
+    h1 { color: #4cafef; }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
-    #btn-upload {
-      font-size: 1.5rem;
+    .progress {
+      width: 100%;
+      margin: 15px auto;
+      height: 25px;
+      background: #333;
+      border-radius: 10px;
+      overflow: hidden;
     }
-  }
-</style>
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4caf50, #00c6ff);
+      text-align: center;
+      color: white;
+      line-height: 25px;
+      transition: width 0.3s;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+    }
+    input[type="file"], input[type="text"] {
+      width: 90%;
+      background: #222;
+      color: #eee;
+    }
+    button {
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #43a047; }
+    a { color: #4cafef; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Lista de vídeos */
+    #search {
+      width: 90%;
+      padding: 10px;
+      background: #222;
+      color: #eee;
+      margin-top: 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+      max-height: 250px;
+      overflow-y: auto;
+      background: #222;
+      border-radius: 10px;
+    }
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #333;
+    }
+    li a {
+      color: #4cafef;
+      word-break: break-all;
+    }
+  </style>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">Pixter</div>
-    <button id="btn-upload" aria-label="Novo post">➕</button>
-  </header>
+  <div class="container">
+    <h1>Uploader de Vídeos</h1>
 
-  <main id="feed" aria-live="polite" aria-label="Feed de posts">
-    <!-- Posts via JS -->
-  </main>
+    <!-- Upload de Arquivo -->
+    <h3>Enviar arquivo do celular</h3>
+    <input type="file" id="fileInput"><br>
+    <button onclick="uploadFile()">Enviar Arquivo</button>
+    <div class="progress"><div id="fileBar" class="bar">0%</div></div>
 
-  <!-- Modal upload -->
-  <div id="modal-upload" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal-content">
-      <h2 id="modal-title">Novo Post</h2>
-      <form id="upload-form">
-        <label for="upload-file" class="upload-label">Escolha foto ou vídeo</label>
-        <input type="file" id="upload-file" accept="image/*,video/*" required />
-        <textarea id="upload-caption" placeholder="Legenda (opcional)" maxlength="2200"></textarea>
-        <button type="submit" disabled>Publicar</button>
-        <button type="button" id="btn-cancel">Cancelar</button>
-      </form>
-      <div id="preview-container"></div>
-    </div>
+    <!-- Upload por URL -->
+    <h3>Enviar por link</h3>
+    <input type="text" id="urlInput" placeholder="Cole a URL do vídeo"><br>
+    <button onclick="uploadUrl()">Enviar por URL</button>
+    <div class="progress"><div id="urlBar" class="bar">0%</div></div>
+
+    <p id="status"></p>
+
+    <!-- Pesquisa e lista -->
+    <h3>Meus vídeos</h3>
+    <input type="text" id="search" placeholder="Pesquisar vídeo pelo nome..." onkeyup="filterVideos()">
+    <ul id="videoList"></ul>
   </div>
 
-<script>
-(() => {
-  // ====== Utilidades =======
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
+  <script>
+    let videos = []; // array para armazenar uploads
 
-  // ====== DOM =======
-  const feedEl = document.getElementById('feed');
-  const btnUpload = document.getElementById('btn-upload');
-  const modal = document.getElementById('modal-upload');
-  const uploadForm = document.getElementById('upload-form');
-  const uploadFile = document.getElementById('upload-file');
-  const uploadCaption = document.getElementById('upload-caption');
-  const previewContainer = document.getElementById('preview-container');
-  const btnCancel = document.getElementById('btn-cancel');
-  const submitBtn = uploadForm.querySelector('button[type="submit"]');
-
-  // ====== Estado =======
-  let posts = JSON.parse(localStorage.getItem('pixter_posts') || '[]');
-
-  // ====== Funções =======
-  // Salvar no localStorage
-  function savePosts() {
-    localStorage.setItem('pixter_posts', JSON.stringify(posts));
-  }
-
-  // Gerar ID único (simples)
-  function genId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2);
-  }
-
-  // Renderizar posts
-  function renderPosts() {
-    feedEl.innerHTML = '';
-    if (!posts.length) {
-      feedEl.innerHTML = '<p style="text-align:center; color:#999;">Nenhum post ainda. Clique no + para criar!</p>';
-      return;
+    function addVideo(name, url) {
+      videos.push({ name, url });
+      renderList(videos);
     }
-    posts.forEach(post => {
-      feedEl.appendChild(createPostElement(post));
-    });
-  }
 
-  // Criar elemento de post
-  function createPostElement(post) {
-    const postEl = document.createElement('article');
-    postEl.className = 'post';
-    postEl.dataset.id = post.id;
-
-    postEl.innerHTML = `
-      <header class="post-header">
-        <img class="avatar" src="https://i.pravatar.cc/40?u=${post.userId}" alt="Avatar do usuário" />
-        <div class="username">${escapeHtml(post.username)}</div>
-      </header>
-      <div class="post-media">
-        ${post.type === 'image' ? `<img src="${post.url}" alt="Foto do post" loading="lazy" />`
-          : `<video src="${post.url}" controls muted preload="metadata"></video>`}
-      </div>
-      <div class="post-actions">
-        <button aria-label="Curtir post" class="like-btn" title="Curtir post" aria-pressed="${post.liked}">
-          ❤️ <span class="like-count">${post.likes}</span>
-        </button>
-        <button aria-label="Comentar no post" class="comment-btn" title="Comentar">
-          💬
-        </button>
-      </div>
-      <div class="post-caption"><strong>${escapeHtml(post.username)}</strong> ${escapeHtml(post.caption)}</div>
-      <section class="comments-section" aria-label="Comentários do post">
-        ${post.comments.map(c => `<div class="comment"><strong>${escapeHtml(c.user)}:</strong> ${escapeHtml(c.text)}</div>`).join('')}
-      </section>
-      <form class="comment-form" aria-label="Adicionar comentário">
-        <input type="text" placeholder="Comente..." aria-label="Campo de comentário" />
-        <button type="submit" disabled>Enviar</button>
-      </form>
-    `;
-
-    // Curtir botão
-    const likeBtn = postEl.querySelector('.like-btn');
-    likeBtn.addEventListener('click', () => {
-      if (post.liked) {
-        post.likes--;
-        post.liked = false;
-      } else {
-        post.likes++;
-        post.liked = true;
-      }
-      savePosts();
-      renderPosts();
-    });
-
-    // Comentário
-    const commentForm = postEl.querySelector('.comment-form');
-    const commentInput = commentForm.querySelector('input');
-    const commentSubmit = commentForm.querySelector('button');
-
-    // Habilitar botão enviar se tem texto
-    commentInput.addEventListener('input', () => {
-      commentSubmit.disabled = !commentInput.value.trim();
-    });
-
-    // Enviar comentário
-    commentForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const text = commentInput.value.trim();
-      if (!text) return;
-      post.comments.push({ user: 'Você', text });
-      savePosts();
-      renderPosts();
-    });
-
-    return postEl;
-  }
-
-  // Mostrar modal upload
-  btnUpload.addEventListener('click', () => {
-    modal.classList.remove('hidden');
-    uploadForm.reset();
-    previewContainer.innerHTML = '';
-    submitBtn.disabled = true;
-  });
-
-  // Cancelar upload
-  btnCancel.addEventListener('click', () => {
-    modal.classList.add('hidden');
-  });
-
-  // Preview do arquivo
-  uploadFile.addEventListener('change', () => {
-    const file = uploadFile.files[0];
-    if (!file) {
-      previewContainer.innerHTML = '';
-      submitBtn.disabled = true;
-      return;
+    function renderList(list) {
+      const ul = document.getElementById("videoList");
+      ul.innerHTML = "";
+      list.forEach(v => {
+        const li = document.createElement("li");
+        li.innerHTML = `🎬 <strong>${v.name}</strong><br><a href="${v.url}" target="_blank">${v.url}</a>`;
+        ul.appendChild(li);
+      });
     }
-    const type = file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : null;
-    if (!type) {
-      alert('Só aceitamos imagens ou vídeos.');
-      uploadFile.value = '';
-      previewContainer.innerHTML = '';
-      submitBtn.disabled = true;
-      return;
+
+    function filterVideos() {
+      const term = document.getElementById("search").value.toLowerCase();
+      const filtered = videos.filter(v => v.name.toLowerCase().includes(term));
+      renderList(filtered);
     }
-    const reader = new FileReader();
-    reader.onload = e => {
-      if (type === 'image') {
-        previewContainer.innerHTML = `<img src="${e.target.result}" alt="Preview da imagem" />`;
-      } else {
-        previewContainer.innerHTML = `<video src="${e.target.result}" controls muted autoplay loop></video>`;
-      }
-      submitBtn.disabled = false;
-    };
-    reader.readAsDataURL(file);
-  });
 
-  // Enviar post
-  uploadForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const file = uploadFile.files[0];
-    if (!file) return;
+    // Upload de arquivo com barra de progresso
+    function uploadFile() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return alert("Selecione um arquivo!");
 
-    const type = file.type.startsWith('image/') ? 'image' : 'video';
-    const caption = uploadCaption.value.trim();
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", "/api/upload-file", true);
 
-    const reader = new FileReader();
-    reader.onload = e => {
-      const newPost = {
-        id: genId(),
-        userId: 1234, // fixo (pode melhorar depois)
-        username: 'usuario123',
-        url: e.target.result,
-        type,
-        caption,
-        likes: 0,
-        liked: false,
-        comments: [],
-        createdAt: Date.now(),
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percent = (e.loaded / e.total) * 100;
+          document.getElementById('fileBar').style.width = percent + "%";
+          document.getElementById('fileBar').innerText = Math.floor(percent) + "%";
+        }
       };
-      posts.unshift(newPost);
-      savePosts();
-      renderPosts();
-      modal.classList.add('hidden');
-    };
-    reader.readAsDataURL(file);
-  });
 
-  // Inicializa
-  renderPosts();
-})();
-</script>
+      xhr.onload = () => {
+        try {
+          const res = JSON.parse(xhr.responseText);
+          if (res.success) {
+            document.getElementById('status').innerHTML =
+              `✅ Upload completo: <a href="${res.url}" target="_blank">Ver vídeo</a>`;
+            addVideo(file.name, res.url);
+          } else {
+            document.getElementById('status').innerText = "❌ Erro: " + res.error;
+          }
+        } catch {
+          document.getElementById('status').innerText = "❌ Erro inesperado no servidor.";
+        }
+      };
+
+      xhr.send(file);
+    }
+
+    // Upload por URL
+    async function uploadUrl() {
+      const url = document.getElementById('urlInput').value;
+      if (!url) return alert("Digite uma URL!");
+
+      document.getElementById('urlBar').style.width = "50%";
+      document.getElementById('urlBar').innerText = "Enviando...";
+
+      const res = await fetch("/api/upload-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('urlBar').style.width = "100%";
+        document.getElementById('urlBar').innerText = "100%";
+        document.getElementById('status').innerHTML =
+          `✅ Upload por URL completo: <a href="${data.url}" target="_blank">Ver vídeo</a>`;
+
+        // Nome genérico baseado no timestamp
+        const name = "video-" + Date.now() + ".mp4";
+        addVideo(name, data.url);
+      } else {
+        document.getElementById('status').innerText = "❌ Erro: " + data.error;
+      }
+    }
+  </script>
 </body>
 </html>
